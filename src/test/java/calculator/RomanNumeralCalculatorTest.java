@@ -14,14 +14,14 @@ public class RomanNumeralCalculatorTest {
 
 	@Before
 	public void setup() {
-		calculator = new MiggyCalculator();
+		calculator = new MyRomanNumeralCalculator();
 	}
 
 	@Test
 	public void testAddition() {
 		String result = calculator.compute("i", "ii", RomanNumeralCalculator.Operator.add);
 		assertEquals("iii", result);
-		
+
 		result = calculator.compute("iii", "i", RomanNumeralCalculator.Operator.add);
 		assertEquals("iv", result);
 
@@ -90,3 +90,4 @@ public class RomanNumeralCalculatorTest {
 	}
 
 }
+
