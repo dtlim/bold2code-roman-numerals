@@ -1,10 +1,9 @@
 package calculator;
 
-/**
- * Created by dale on 1/19/16.
- */
-
 public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
+    String[] millionString = {"M"};
+    String[] hundredThousandsString = {"C", "CC", "CCC", "D", "CD", "DC", "DCC", "DCCC", "CM"};
+    String[] tenThousandsString = {"X", "XX", "XXX", "L", "XL", "LX", "LXX", "LXXX", "XC"};
     String[] thousandsString = {"m", "mm", "mmm", "V", "mV", "Vm", "Vmm", "Vmmm", "mX", "X"};
     String[] hundredsString = {"c", "cc", "ccc", "d", "cd", "dc", "dcc", "dccc", "cm"};
     String[] tensString = {"x", "xx", "xxx", "l", "xl", "lx", "lxx", "lxxx", "xc"};
@@ -30,6 +29,9 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
     }
 
     public int romanNumeralToNumber(String romanNumeral) {
+        int million = 0;
+        int hundredThousands = 0;
+        int tenThousands = 0;
         int thousands = 0;
         int hundreds = 0;
         int tens = 0;
@@ -40,6 +42,21 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
             sign = -1;
         }
 
+        for (int a = 0; a < millionString.length; a++) {
+            if (romanNumeral.contains(millionString[a])) {
+                million = numbers[a];
+            }
+        }
+        for (int a = 0; a < hundredThousandsString.length; a++) {
+            if (romanNumeral.contains(hundredThousandsString[a])) {
+                hundredThousands = numbers[a];
+            }
+        }
+        for (int a = 0; a < tenThousandsString.length; a++) {
+            if (romanNumeral.contains(tenThousandsString[a])) {
+                tenThousands = numbers[a];
+            }
+        }
         for (int a = 0; a < thousandsString.length; a++) {
             if (romanNumeral.contains(thousandsString[a])) {
                 thousands = numbers[a];
@@ -61,11 +78,15 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
             }
         }
 
-        return ((thousands * 1000) + (hundreds * 100) + (tens * 10) + ones) * sign;
+        return ( (million * 1000000) + (hundredThousands * 100000) + (tenThousands * 10000) +
+                (thousands * 1000) + (hundreds * 100) + (tens * 10) + ones) * sign;
     }
 
     public String numberToRomanNumeral(int number) {
         String sign = "";
+        int million = 0;
+        int hundredThousands = 0;
+        int tenThousands = 0;
         int thousands = 0;
         int hundreds = 0;
         int tens = 0;
@@ -76,6 +97,12 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
             number *= -1;
         }
 
+        million = number / 1000000;
+        number %= 1000000;
+        hundredThousands = number / 100000;
+        number %= 100000;
+        tenThousands = number / 10000;
+        number %= 10000;
         thousands = number / 1000;
         number %= 1000;
         hundreds = number / 100;
@@ -84,11 +111,23 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
         number %= 10;
         ones = number;
 
+        String millionRN = "";
+        String hundredThousandsRN = "";
+        String tenThousandsRN = "";
         String thousandsRN = "";
         String hundredsRN = "";
         String tensRN = "";
         String onesRN = "";
 
+        if(million != 0) {
+            millionRN = millionString[getIndex(million)];
+        }
+        if(hundredThousands != 0) {
+            hundredThousandsRN = hundredThousandsString[getIndex(hundredThousands)];
+        }
+        if(tenThousands != 0) {
+            tenThousandsRN = tenThousandsString[getIndex(tenThousands)];
+        }
         if (thousands != 0) {
             thousandsRN = thousandsString[getIndex(thousands)];
         }
@@ -102,7 +141,7 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
             onesRN = onesString[getIndex(ones)];
         }
 
-        return (sign + thousandsRN + hundredsRN + tensRN + onesRN);
+        return (sign + millionRN + hundredThousandsRN + tenThousandsRN + thousandsRN + hundredsRN + tensRN + onesRN);
     }
 
     public int getIndex(int x) {
