@@ -1,5 +1,7 @@
 package calculator;
 
+import calculator.submissions.geraldroy.GeraldRoy;
+import calculator.submissions.renequinto.ReneQuinto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +17,7 @@ public class RomanNumeralCalculatorTest {
 
 	@Before
 	public void setup() {
-		calculator = new MyRomanNumeralCalculator();
+		calculator = new GeraldRoy();
 	}
 
 	/**
@@ -39,6 +41,11 @@ public class RomanNumeralCalculatorTest {
 		assertEquals("ii", calculator.compute("i", "ii", multiply));
 		assertEquals("l", calculator.compute("v", "x", multiply));
 		assertEquals("xv", calculator.compute("v", "iii", multiply));
+
+		// 9 and 8
+		assertEquals("xvii", calculator.compute("ix", "viii", add));
+		assertEquals("i", calculator.compute("ix", "viii", subtract));
+		assertEquals("lxxii", calculator.compute("ix", "viii", multiply));
 	}
 
 	/**
@@ -61,13 +68,19 @@ public class RomanNumeralCalculatorTest {
 		assertEquals("xxxiii", calculator.compute("xxiv", "ix", add));
 		assertEquals("xv", calculator.compute("xxiv", "ix", subtract));
 		assertEquals("ccxvi", calculator.compute("xxiv", "ix", multiply));
+
+		// 49 and -12
+		assertEquals("xxxvii", calculator.compute("xlix", "-xii", add));
+		assertEquals("lxi", calculator.compute("xlix", "-xii", subtract));
+		assertEquals("-dlxxxviii", calculator.compute("xlix", "-xii", multiply));
 	}
 
 	@Test
 	public void advancedAndEdgeCases() {
 		assertEquals("-i", calculator.compute("i", "ii", subtract));
 		assertEquals("", calculator.compute("v", "v", subtract));
-		assertEquals("mmmcmxv", calculator.compute("xlv", "lxxxvii", multiply)); // 45 x , 87
+		assertEquals("", calculator.compute("mxi", "-mxi", add));
+		assertEquals("mmmcmxv", calculator.compute("xlv", "lxxxvii", multiply)); // 45 x 87
 
 		// 123 and 345
 		assertEquals("cdlxviii", calculator.compute("cxxiii", "cccxlv", add));
@@ -83,6 +96,11 @@ public class RomanNumeralCalculatorTest {
 		assertEquals("mcmxcvii", calculator.compute("cmxcviii", "cmxcix", add));
 		assertEquals("-i", calculator.compute("cmxcviii", "cmxcix", subtract));
 		assertEquals("CMXCVmmii", calculator.compute("cmxcviii", "cmxcix", multiply));
+
+		// -439 and -599
+		assertEquals("-mxl", calculator.compute("-cdxxxix", "-dci", add));
+		assertEquals("clxii", calculator.compute("-cdxxxix", "-dci", subtract));
+		assertEquals("CCLXmmmdcccxxxix", calculator.compute("-cdxxxix", "-dci", multiply));
 	}
 
 }
