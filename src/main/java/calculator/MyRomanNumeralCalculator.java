@@ -9,7 +9,7 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
     String[] tensString = {"x", "xx", "xxx", "l", "xl", "lx", "lxx", "lxxx", "xc"};
     String[] onesString = {"i", "ii", "iii", "v", "iv", "vi", "vii", "viii", "ix"};
     String[][] romanNumeralString = {onesString, tensString, hundredsString, thousandsString, tenThousandsString, hundredThousandsString, millionString};
-    int[] numbers = {1, 2, 3, 5, 4, 6, 7, 8, 9, 10};
+    int[] numbers = {1, 2, 3, 5, 4, 6, 7, 8, 9};
 
     @Override
     public String compute(String romanNumeralOne, String romanNumeralTwo, Operator operation) {
@@ -41,11 +41,14 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
         for (int a = 0; a < romanNumeralString.length; a++) {
             for (int x = 0; x < romanNumeralString[a].length; x++) {
                 if (romanNumeral.contains(romanNumeralString[a][x])) {
-                    if (x == 0 && a !=0 && a != romanNumeralString.length) {
-                        if (romanNumeral.contains(romanNumeralString[a--][8])) {
+                    if (x == 0 && a != 0 && a != romanNumeralString.length - 1) {
+                        int u = romanNumeral.indexOf(romanNumeralString[a][x]);
+                        int v = romanNumeral.indexOf(romanNumeralString[a-1][8]);
+                        if (u == v + 1 && v != -1) {
                             continue;
                         }
                     }
+
                     digits[a] = numbers[x];
                 }
             }
@@ -54,6 +57,7 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
         for (int a = 0; a < digits.length; a++) {
             sum += digits[a] * Math.pow(10, a);
         }
+        sum *= sign;
         return sum;
     }
 
@@ -72,7 +76,7 @@ public class MyRomanNumeralCalculator implements RomanNumeralCalculator {
             number %= Math.pow(10, a);
         }
 
-        String endNumber = "";
+        String endNumber = sign + "";
         for (int a = RN.length - 1; a >= 0; a--) {
             if (digits[a] != 0) {
                 endNumber += romanNumeralString[a][getIndex(digits[a])];
