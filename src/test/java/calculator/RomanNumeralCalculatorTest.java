@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.BlockJUnit4ClassRunner;
 
+import static calculator.RomanNumeralCalculator.Operator.*;
 import static junit.framework.Assert.assertEquals;
 
 @RunWith(BlockJUnit4ClassRunner.class)
@@ -17,77 +18,73 @@ public class RomanNumeralCalculatorTest {
 		calculator = new MyRomanNumeralCalculator();
 	}
 
+	/**
+	 * Low non-negative numbers
+	 */
 	@Test
-	public void testAddition() {
-		String result = calculator.compute("i", "ii", RomanNumeralCalculator.Operator.add);
-		assertEquals("iii", result);
+	public void basic() {
+		// Add
+		assertEquals(calculator.compute("i", "ii", add), "iii");
+		assertEquals(calculator.compute("iii", "i", add), "iv");
+		assertEquals(calculator.compute("vi", "v", add), "xi");
+		assertEquals(calculator.compute("v", "vi", add), "xi");
+		assertEquals(calculator.compute("xii", "v", add), "xvii");
+		assertEquals(calculator.compute("xxx", "xi", add), "xli"); // 30 + 11
 
-		result = calculator.compute("iii", "i", RomanNumeralCalculator.Operator.add);
-		assertEquals("iv", result);
+		// Subtract
+		assertEquals(calculator.compute("ii", "i", subtract), "i");
+		assertEquals(calculator.compute("vi", "ii", subtract), "iv");
 
-		result = calculator.compute("vi", "v", RomanNumeralCalculator.Operator.add);
-		assertEquals("xi", result);
+		// Multiply
+		assertEquals(calculator.compute("i", "ii", multiply), "ii");
+		assertEquals(calculator.compute("v", "x", multiply), "l");
+		assertEquals(calculator.compute("v", "iii", multiply), "xv");
+	}
 
-		result = calculator.compute("v", "vi", RomanNumeralCalculator.Operator.add);
-		assertEquals("xi", result);
+	/**
+	 * Includes negative numbers and numbers with a higher absolute value
+	 */
+	@Test
+	public void intermediate() {
+		// Add
+		assertEquals(calculator.compute("-ii", "i", add), "-i");
+		assertEquals(calculator.compute("i", "-ii", add), "-i");
+		assertEquals(calculator.compute("x", "-xv", add), "-v");
+		assertEquals(calculator.compute("-x", "xv", add), "v");
 
-        result = calculator.compute("-ii", "i", RomanNumeralCalculator.Operator.add);
-        assertEquals("-i", result);
+		// Multiply
+		assertEquals(calculator.compute("i", "-i", multiply), "-i");
+		assertEquals(calculator.compute("-i", "i", multiply), "-i");
+		assertEquals(calculator.compute("m", "m", multiply), "M");
 
-        result = calculator.compute("i", "-ii", RomanNumeralCalculator.Operator.add);
-        assertEquals("-i", result);
-
-        result = calculator.compute("x", "-xv", RomanNumeralCalculator.Operator.add);
-        assertEquals("-v", result);
-
-        result = calculator.compute("-x", "xv", RomanNumeralCalculator.Operator.add);
-        assertEquals("v", result);
-
+		// 24 and 9
+		assertEquals(calculator.compute("xxiv", "ix", add), "xxxiii");
+		assertEquals(calculator.compute("xxiv", "ix", subtract), "xv");
+		assertEquals(calculator.compute("xxiv", "ix", multiply), "ccxvi");
 	}
 
 	@Test
-	public void testSubtraction() {
-		String result = calculator.compute("ii", "i", RomanNumeralCalculator.Operator.subtract);
-		assertEquals("i", result);
+	public void advancedAndEdgeCases() {
+		assertEquals(calculator.compute("i", "ii", subtract), "-i");
+		assertEquals(calculator.compute("v", "v", subtract), "");
+		assertEquals(calculator.compute("xlv", "lxxxvii", multiply), "mmmcmxv"); // 45 x 87
 
-        result = calculator.compute("i", "ii", RomanNumeralCalculator.Operator.subtract);
-		assertEquals("-i", result);
+		// 123 and 345
+		assertEquals(calculator.compute("cxxiii", "cccxlv", add), "cdlxviii");
+		assertEquals(calculator.compute("cxxiii", "cccxlv", subtract), "-ccxxii");
+		assertEquals(calculator.compute("cxxiii", "cccxlv", multiply), "XLmmcdxxxv");
 
-        result = calculator.compute("vi", "ii", RomanNumeralCalculator.Operator.subtract);
-        assertEquals("iv", result);
+		// 830 and 749
+		assertEquals(calculator.compute("dcccxxx", "dccxlix", add), "mdlxxix");
+		assertEquals(calculator.compute("dcccxxx", "dccxlix", subtract), "lxxxi");
+		assertEquals(calculator.compute("dcccxxx", "dccxlix", multiply), "DCXXmdclxx");
 
-        result = calculator.compute("v", "v", RomanNumeralCalculator.Operator.subtract);
-        assertEquals("", result);
+		// 998 and 999
+		assertEquals(calculator.compute("cmxcviii", "cmxcix", add), "mcmxcvii");
+		assertEquals(calculator.compute("cmxcviii", "cmxcix", subtract), "-i");
+		assertEquals(calculator.compute("cmxcviii", "cmxcix", multiply), "CMXCVmmii");
 	}
 
-    @Test
-	public void testMultiplication() {
-		String result = calculator.compute("i", "ii", RomanNumeralCalculator.Operator.multiply);
-		assertEquals("ii", result);
-
-        result = calculator.compute("i", "-i", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("-i", result);
-
-        result = calculator.compute("-i", "i", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("-i", result);
-
-        result = calculator.compute("v", "x", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("l", result);
-
-        result = calculator.compute("v", "iii", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("xv", result);
-
-        result = calculator.compute("m", "m", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("M", result);
-
-        // 45 x 87
-        result = calculator.compute("xlv", "lxxxvii", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("mmmcmxv", result);
-
-        // 123 x 345
-        result = calculator.compute("cxxiii", "cccxlv", RomanNumeralCalculator.Operator.multiply);
-        assertEquals("XLmmcdxxxv", result);
-	}
 
 }
 
