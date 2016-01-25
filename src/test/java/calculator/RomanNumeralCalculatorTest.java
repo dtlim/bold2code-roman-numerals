@@ -1,7 +1,5 @@
 package calculator;
 
-import calculator.submissions.geraldroy.GeraldRoy;
-import calculator.submissions.renequinto.ReneQuinto;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,7 +15,7 @@ public class RomanNumeralCalculatorTest {
 
 	@Before
 	public void setup() {
-		calculator = new GeraldRoy();
+		calculator = new MyRomanNumeralCalculator();
 	}
 
 	/**
@@ -79,7 +77,6 @@ public class RomanNumeralCalculatorTest {
 	public void advancedAndEdgeCases() {
 		assertEquals("-i", calculator.compute("i", "ii", subtract));
 		assertEquals("", calculator.compute("v", "v", subtract));
-		assertEquals("", calculator.compute("mxi", "-mxi", add));
 		assertEquals("mmmcmxv", calculator.compute("xlv", "lxxxvii", multiply)); // 45 x 87
 
 		// 123 and 345
